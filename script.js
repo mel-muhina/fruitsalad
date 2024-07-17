@@ -20,13 +20,9 @@ const fruitCalories = {
 
 const addFruit = (fruit) => {
     // fruitCalories[fruit.name] = fruit.nutritions.calories
-
-    const li = document.createElement("li")
-
-    console.log('add fruit - fruit info', fruit.name, fruitCalories);
-    fruitList.appendChild(li)
-    // calories += fruit.nutritions.calories
-    // fruitNutrition.textContent = calories
+    const li = document.createElement("li") //creates a list element 
+    fruitList.appendChild(li) 
+    fruitNutrition.textContent = calories
 
     
 }
@@ -34,15 +30,19 @@ const addFruit = (fruit) => {
 async function fetchFruitData(fruit) {
     try {
     const response = await fetch(`https://fruit-api-5v0j.onrender.com/fruits/${fruit}`)
-    const imageResponse = await fetch(`https://pixabay.com/api/?key={APIKEY}=${fruit}+fruit&image_type=photo`)
+    const imageResponse = await fetch(`https://pixabay.com/api/?key=16367689-427eb3d1dc7a2e4a071626711&q=${fruit}+fruit&image_type=photo`)
    
     if (response.ok && imageResponse.ok) {
         const data = await response.json() //takes the json data file and converts it into readable js code
         const imageData = await imageResponse.json()
-        console.log('fetchFruitData - img', imageData.hits[0].previewURL)
-        addFruit(data)
-        addImage(imageData.hits[0].previewURL)
-        addCalorie(data.nutritions.calories)
+        
+        let calorieValue = data.nutritions.calories
+
+        addFruit(data) // Sending 'data' to the addFruit function 
+        addImage(imageData.hits[0].previewURL, calorieValue) // Sending the url to the addImage function
+        addCalorie(calorieValue)
+    
+
     } else {
         throw "Error: http status code = " + response.status
     } 
@@ -53,32 +53,34 @@ catch (err) {
 }
 
 
-const addCalorie = (c) => {
-    const cal = c
-    console.log(cal)
+const addCalorie = (cal) => {
+    // const cal = c
+    
     calories += cal
     fruitNutrition.textContent = calories
+    // addImage.dataset.calories = cal
+    
+    
+
 }
 
 
 
-const addImage = (url) => {
+const addImage = (url, c) => {
     const img = document.createElement("img")
     img.src = url
-    fruitList.appendChild(img)
-    img.addEventListener("click", () => {
+    cals = c
+    
+    img.dataset.calories = cals;
+    
+
+      fruitList.appendChild(img) // Add img to the fruit list
+   
+      img.addEventListener("click", () => {
         img.remove();
+        calories -= img.dataset.calories
+        fruitNutrition.textContent = calories
+        
     })
   
 }
-
-
-// const removeImage = (url) => {
-//     const img = document.removeChild("img")
-// }
-
-// const addFruitNutrition = (fruit) => {
-//     fruitCalories.fruit.name = fruit.nutritions.calories
-//     calories += fruit.nutritions.calories
-//     fruitNutrition.textContent = calories
-// }
