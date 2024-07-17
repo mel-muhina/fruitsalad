@@ -30,7 +30,7 @@ const addFruit = (fruit) => {
 async function fetchFruitData(fruit) {
     try {
     const response = await fetch(`https://fruit-api-5v0j.onrender.com/fruits/${fruit}`)
-    const imageResponse = await fetch(`https://pixabay.com/api/?key=16367689-427eb3d1dc7a2e4a071626711&q=${fruit}+fruit&image_type=photo`)
+    const imageResponse = await fetch(`https://pixabay.com/api/?key={key}&q=${fruit}+fruit&image_type=photo`)
    
     if (response.ok && imageResponse.ok) {
         const data = await response.json() //takes the json data file and converts it into readable js code
